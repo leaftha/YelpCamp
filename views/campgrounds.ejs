@@ -1,6 +1,6 @@
 <%- include('partials/header'); %>
 
-<div class="container-fluid">
+<div class="container">
   <header class="jumbotron">
     <div class="container">
       <h1>Welcome To YelpCamp!</h1>
@@ -15,9 +15,9 @@
 
   <div class="row text-center" style="display: flex; flex-wrap: wrap">
     <% campgrounds.forEach(function(campground){ %>
-    <div class="col-md-4 p-2 col-sm-6">
-      <div class="img-thumbnail img-fluid">
-        <img src="<%= campground.image %>" />
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+      <div class="card text-center box-shadow">
+        <img class="card-img-top images" src="<%= campground.image %>" />
         <div class="caption">
           <h4><%= campground.name %></h4>
         </div>
