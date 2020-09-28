@@ -1,20 +1,20 @@
 const express = require("express"),
   app = express(),
   bodyParser = require("body-parser"),
-  mongoose = require("mongoose");
+  mongoose = require("mongoose"),
+  Campground = require("./models/campground");
 
-mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
+mongoose
+  .connect("mongodb://localhost/yelp_camp", {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log(`Database connected`))
+  .catch((err) => console.log(`Database connection error: ${err.message}`));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-
-//Schema
-const campgroundSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  description: String,
-});
-
-const Campground = mongoose.model("Campground", campgroundSchema);
 
 // Campground.create({
 //   name: "Granite Hill",
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 //index
 app.get("/campgrounds", (req, res) => {
   //from DBS
-  Campground.find({})
+  Campground.find()
     .then((allCampgrounds) => {
       res.render("index", { campgrounds: allCampgrounds });
     })
