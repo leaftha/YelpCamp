@@ -1,0 +1,11 @@
+.card img {
+  width: 100%;
+}
+
+.card {
+  padding: 0;
+}
+
+.card .card-body p {
+  padding: 9px;
+}

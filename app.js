@@ -3,6 +3,7 @@ const express = require("express"),
   bodyParser = require("body-parser"),
   mongoose = require("mongoose"),
   Campground = require("./models/campground"),
+  Comment = require("./models/comment"),
   seedDB = require("./seeds");
 
 mongoose
@@ -16,6 +17,7 @@ mongoose
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
 seedDB();
 
 app.get("/", (req, res) => {
@@ -27,7 +29,7 @@ app.get("/campgrounds", (req, res) => {
   //from DBS
   Campground.find({})
     .then((allCampgrounds) => {
-      res.render("index", { campgrounds: allCampgrounds });
+      res.render("campgrounds/index", { campgrounds: allCampgrounds });
     })
     .catch((err) => {
       console.log(err);
@@ -53,7 +55,7 @@ app.post("/campgrounds", function (req, res) {
 
 //new
 app.get("/campgrounds/new", (req, res) => {
-  res.render("new.ejs");
+  res.render("campgrounds/new.ejs");
 });
 
 //show
@@ -63,10 +65,45 @@ app.get("/campgrounds/:id", (req, res) => {
     .exec()
     .then((foundCampgrounds) => {
       console.log(foundCampgrounds);
-      res.render("show", { campground: foundCampgrounds });
+      res.render("campgrounds/show", { campground: foundCampgrounds });
     })
     .catch((err) => {
       console.log(err);
+    });
+});
+
+//=====================
+//Comments routes
+//=====================
+
+app.get("/campgrounds/:id/comments/new", (req, res) => {
+  //find campground
+  Campground.findById(req.params.id)
+    .then((campground) => {
+      res.render("comments/new", { campground: campground });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post("/campgrounds/:id/comments", (req, res) => {
+  Campground.findById(req.params.id)
+    .then((campground) => {
+      console.log(req.body.comment);
+      Comment.create(req.body.comment)
+        .then((comment) => {
+          campground.comments.push(comment);
+          campground.save();
+          res.redirect("/campgrounds/" + campground._id);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.redirect("/campgrounds");
     });
 });
 
