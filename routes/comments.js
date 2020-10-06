@@ -20,6 +20,12 @@ router.post("/", (req, res) => {
       console.log(req.body.comment);
       Comment.create(req.body.comment)
         .then((comment) => {
+          //add username and id to comment
+          comment.author.id = req.user._id;
+          comment.author.username = req.user.username;
+          console.log("New comment's username will be " + req.user.username);
+          //save comment
+          comment.save();
           campground.comments.push(comment);
           campground.save();
           res.redirect("/campgrounds/" + campground._id);
