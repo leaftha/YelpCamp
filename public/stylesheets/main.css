@@ -9,3 +9,7 @@
 .card .card-body p {
   padding: 9px;
 }
+
+.delet {
+  display: inline;
+}
