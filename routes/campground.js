@@ -60,6 +60,28 @@ router.get("/:id", (req, res) => {
     });
 });
 
+//Edit
+router.get("/:id/edit", (req, res) => {
+  Campground.findById(req.params.id)
+    .then((foundCampground) => {
+      res.render("campgrounds/edit", { campground: foundCampground });
+    })
+    .catch((err) => {
+      res.redirect("/campgrounds");
+    });
+});
+
+//update
+router.put("/:id", (req, res) => {
+  Campground.findByIdAndUpdate(req.params.id, req.body.campground)
+    .then((updatedCampground) => {
+      res.redirect("/campgrounds/" + req.params.id);
+    })
+    .catch((err) => {
+      res.redirect("/campgrounds");
+    });
+});
+
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
