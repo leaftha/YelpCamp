@@ -40,6 +40,42 @@ router.post("/", (req, res) => {
     });
 });
 
+//comment edit
+router.get("/:comment_id/edit", (req, res) => {
+  Comment.findById(req.params.comment_id)
+    .then((foundComment) => {
+      res.render("comments/edit", {
+        campground_id: req.params.id,
+        comment: foundComment,
+      });
+    })
+    .catch((err) => {
+      res.redirect("back");
+    });
+});
+
+//comment update
+router.put("/:comment_id", (req, res) => {
+  Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment)
+    .then((updatedComment) => {
+      res.redirect("/campgrounds/" + req.params.id);
+    })
+    .catch((err) => {
+      res.redirect("back");
+    });
+});
+
+//comment delet
+router.delete("/:comment_id", (req, res) => {
+  Comment.findByIdAndRemove(req.params.comment_id)
+    .then((result) => {
+      res.redirect("/campgrounds/" + req.params.id);
+    })
+    .catch((err) => {
+      res.redirect("back");
+    });
+});
+
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
